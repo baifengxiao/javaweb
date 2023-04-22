@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,7 +88,7 @@ public class DispatcherServlet extends ViewBaseServlet {
         Object controllerBeanObj = beanMap.get(servletPath);
 
 
-        req.setAttribute("operate","add");
+        req.setAttribute("operate", "add");
         String operate = req.getParameter("operate");
         System.out.println(operate);
         if (StringUtil.isEmpty(operate)) {
@@ -95,27 +96,77 @@ public class DispatcherServlet extends ViewBaseServlet {
         }
 
         try {
-            Method method = controllerBeanObj.getClass().getDeclaredMethod(operate, HttpServletRequest.class);
-            if (method != null) {
-                //2.controller组件中的方法调用
-                method.setAccessible(true);
-                Object returnObj = method.invoke(controllerBeanObj, req);
 
 
-                //3.视图处理
-                 String methodReturnStr = (String) returnObj;
-                 if (methodReturnStr.startsWith("redirect:")){
-                     String redirectStr = methodReturnStr.substring("redirect:".length());
-                     resp.sendRedirect(redirectStr);
-                 }else {
-                     super.processTemplate(methodReturnStr,req,resp);
-                 }
+            Method[] methods = controllerBeanObj.getClass().getDeclaredMethods();
+            for (Method method : methods) {
+                String methodName = method.getName();
+                if (methodName.equals(operate)) {
 
-            } else {
-                throw new RuntimeException("operate值非法!");
+
+                    {
+
+                        //1，统一获取请求参数
+
+                        //获取当前方法的参数,返回参数数组
+                        Parameter[] parameters = method.getParameters();
+
+                        //parametersValues  用于承载参数的值
+
+                        Object[] parameterValues = new Object[parameters.length];
+                        for (int i = 0; i < parameters.length; i++) {
+                            Parameter parameter = parameters[i];
+                            String parameterName = parameter.getName();
+
+                            //特殊值判断
+                            if ("request".equals(parameterName)) {
+                                parameterValues[i] = req;
+                            } else if ("session".equals(parameterName)) {
+                                parameterValues[i] = req.getSession();
+                            } else {
+                                //从请求中获取参数值
+                                String parameterValue = req.getParameter(parameterName);
+                                String typeName = parameter.getType().getName();
+                                Object parameterObj = parameterValue;
+                                if (parameterObj != null) {
+                                    if ("java.lang.Integer".equals(typeName)) {
+                                        parameterObj = Integer.parseInt(parameterValue);
+
+                                    }
+                                }
+
+                                parameterValues[i] = parameterObj;
+
+                            }
+
+
+                        }
+
+
+                        //2.controller组件中的方法调用
+                        method.setAccessible(true);
+                        Object returnObj = method.invoke(controllerBeanObj, req);
+
+
+                        //3.视图处理
+                        String methodReturnStr = (String) returnObj;
+                        if (methodReturnStr.startsWith("redirect:")) {
+                            String redirectStr = methodReturnStr.substring("redirect:".length());
+                            resp.sendRedirect(redirectStr);
+                        } else {
+                            super.processTemplate(methodReturnStr, req, resp);
+                        }
+
+                    }
+
+
+                } else {
+                    throw new RuntimeException("operate值非法!");
+                }
+
             }
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+
+
         } catch (InvocationTargetException e) {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
