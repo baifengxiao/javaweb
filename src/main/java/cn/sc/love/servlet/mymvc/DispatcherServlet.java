@@ -28,7 +28,7 @@ import java.util.Map;
  * @create 2023-04-22-6:26
  */
 @WebServlet("*.do")
-public class DispatcherServlet extends HttpServlet {
+public class DispatcherServlet extends ViewBaseServlet {
 
     Map<String, Object> beanMap = new HashMap<>();
 
@@ -95,11 +95,22 @@ public class DispatcherServlet extends HttpServlet {
         }
 
         try {
-            Method method = controllerBeanObj.getClass().getDeclaredMethod(operate, HttpServletRequest.class, HttpServletResponse.class);
+            Method method = controllerBeanObj.getClass().getDeclaredMethod(operate, HttpServletRequest.class);
             if (method != null) {
+                //2.controller组件中的方法调用
                 method.setAccessible(true);
-                method.invoke(controllerBeanObj, req, resp);
-//                    return;
+                Object returnObj = method.invoke(controllerBeanObj, req);
+
+
+                //3.视图处理
+                 String methodReturnStr = (String) returnObj;
+                 if (methodReturnStr.startsWith("redirect:")){
+                     String redirectStr = methodReturnStr.substring("redirect:".length());
+                     resp.sendRedirect(redirectStr);
+                 }else {
+                     super.processTemplate(methodReturnStr,req,resp);
+                 }
+
             } else {
                 throw new RuntimeException("operate值非法!");
             }
