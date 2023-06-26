@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue的入门</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <div>{{message}}</div>
+    <!-- v-bind:value表示将value属性交给Vue来进行管理，也就是绑定到Vue对象 -->
+    <!-- vueValue是一个用来渲染属性值的表达式，相当于标签体中加{{}}的表达式 -->
+    <!--    单向数据绑定写法1-->
+    <input type="text" v-bind:value="vueValue"/>
+    <!--    单向数据绑定写法1-->
+    <input type="text" v-bind:value="vueValue1"/>
+    <input type="text" v-model:value="vueValue2"/>
+    <input type="text" v-model.trim="vueValue3"/>
+
+    <!-- 同样的表达式，在标签体内通过{{}}告诉Vue这里需要渲染； -->
+    <!-- 在HTML标签的属性中，通过v-bind:属性名="表达式"的方式告诉Vue这里要渲染 -->
+    <p>{{vueValue}}</p>
+    <p>{{vueValue1}}</p>
+    <p>{{vueValue2}}</p>
+    <p>{{vueValue3}}</p>
+    <!--    绑定样式-->
+    <p v-bind:style="fontCss">vue绑定样式</p>
+</div>
+<!--
+使用vue获取div中的内容，以及设置div中的内容
+使用vue的具体步骤:
+1. 指定一个区域，在该区域中使用vue (这里是id="app"区域)
+2. 在该区域下方 再编写一个script标签，在script标签中创建Vue对象
+3. 以json格式给Vue对象传入需要传入的参数
+1. "el" 表示哪块区域可以使用vue
+2. "data" 表示你需要定义的数据模型
+4. 将message这个数据模型绑定给div的标签体: 使用插值表达式进行绑定
+-->
+<script>
+    var vue = new Vue({
+        "el": "#app",
+        "data": {
+            "message": "hello vue", //定义了一个数据模型，该数据模型的名字叫"message"
+
+            "vueValue": "单向绑定写法1",
+            "vueValue1": "单向绑定写法2",
+            "vueValue2": "双向绑定写法",
+            "vueValue3": "去重",
+            "fontCss": {
+                "color": "red",
+                "font-size": "30px",
+            }
+        }
+    });
+</script>
+</body>
+</html>
