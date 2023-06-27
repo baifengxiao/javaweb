@@ -36,6 +36,33 @@
 2. "data" 表示你需要定义的数据模型
 4. 将message这个数据模型绑定给div的标签体: 使用插值表达式进行绑定
 -->
+<!---------------分割--------------->
+<div id="app01">
+    <ul>
+        <!-- 使用v-for语法遍历数组 -->
+        <!-- v-for的值是语法格式是：引用数组元素的变量名 in Vue对象中的数组属性名 -->
+        <!-- 在文本标签体中使用{{引用数组元素的变量名}}渲染每一个数组元素 -->
+        <li v-for="fruit in fruitList">{{fruit}}</li>
+    </ul>
+</div>
+<div id="app1">
+    <table>
+        <tr>
+            <th>编号</th>
+            <th>姓名</th>
+            <th>年龄</th>
+            <th>专业</th>
+        </tr>
+        <!-- index变量在这段代码中没有直接使用，但它可以用于获取当前循环的索引值。如果需要在循环中访问当前元素的索引，可以使用index变量 -->
+        <tr v-for="(employee,index) in employeeList">
+            <td>{{employee.empId}}</td>
+            <td>{{employee.empName}}</td>
+            <td>{{employee.empAge}}</td>
+            <td>{{employee.empSubject}}</td>
+        </tr>
+    </table>
+</div>
+
 <script>
     var vue = new Vue({
         "el": "#app",
@@ -50,6 +77,43 @@
                 "color": "red",
                 "font-size": "30px",
             }
+        }
+    });
+    var app01 = new Vue({
+        "el":"#app01",
+        "data":{
+            "fruitList": [
+                "apple",
+                "banana",
+                "orange",
+                "grape",
+                "dragonfruit"
+            ]
+        }
+    });
+    var app = new Vue({
+        "el":"#app1",
+        "data":{
+            "employeeList":[
+                {
+                    "empId":11,
+                    "empName":"tom",
+                    "empAge":111,
+                    "empSubject":"java"
+                },
+                {
+                    "empId":22,
+                    "empName":"jerry",
+                    "empAge":222,
+                    "empSubject":"php"
+                },
+                {
+                    "empId":33,
+                    "empName":"bob",
+                    "empAge":333,
+                    "empSubject":"python"
+                }
+            ]
         }
     });
 </script>
