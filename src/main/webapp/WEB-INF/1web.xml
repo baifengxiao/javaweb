@@ -3,30 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
-<!--    <servlet>-->
-<!--        <servlet-name>AddServlet</servlet-name>-->
-<!--        <servlet-class>cn.sc.love.servlet1.Servlet.AddServlet</servlet-class>-->
-<!--    </servlet>-->
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>AddServlet</servlet-name>-->
-<!--        <url-pattern>/add</url-pattern>-->
-<!--    </servlet-mapping>-->
-<!--    <servlet>-->
-<!--        <servlet-name>LifeCycle</servlet-name>-->
-<!--        <servlet-class>cn.sc.love.servlet1.Servlet.LifeCycle</servlet-class>-->
-<!--    </servlet>-->
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>LifeCycle</servlet-name>-->
-<!--        <url-pattern>/02</url-pattern>-->
-<!--    </servlet-mapping>-->
-<!--    <servlet>-->
-<!--        <servlet-name>SessionTest</servlet-name>-->
-<!--        <servlet-class>cn.sc.love.servlet1.Servlet.SessionTest</servlet-class>-->
-<!--    </servlet>-->
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>SessionTest</servlet-name>-->
-<!--        <url-pattern>/03</url-pattern>-->
-<!--    </servlet-mapping>-->
+
+
 <!--    <servlet>-->
 <!--        <servlet-name>SessionTest1</servlet-name>-->
 <!--        <servlet-class>cn.sc.love.servlet1.Servlet.SessionTest1</servlet-class>-->

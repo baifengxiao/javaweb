@@ -19,4 +19,20 @@
         <servlet-name>LifeCycle</servlet-name>
         <url-pattern>/LifeCycle</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>SessionTest</servlet-name>
+        <servlet-class>cn.sc.love.servlet.SessionTest</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SessionTest</servlet-name>
+        <url-pattern>/03</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>SessionTest1</servlet-name>
+        <servlet-class>cn.sc.love.servlet.SessionTest1</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SessionTest</servlet-name>
+        <url-pattern>/04</url-pattern>
+    </servlet-mapping>
 </web-app>
