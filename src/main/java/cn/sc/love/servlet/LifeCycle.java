@@ -1,4 +1,4 @@
-package cn.sc.love.servlet1.Servlet;
+package cn.sc.love.servlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -19,7 +19,7 @@ public class LifeCycle extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        System.out.println("正在周期初始化");
+        System.out.println("周期初始化");
 
     }
 

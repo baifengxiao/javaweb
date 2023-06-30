@@ -11,5 +11,12 @@
         <servlet-name>TestServlet</servlet-name>
         <url-pattern>/fruit</url-pattern>
     </servlet-mapping>
-
+    <servlet>
+        <servlet-name>LifeCycle</servlet-name>
+        <servlet-class>cn.sc.love.servlet.LifeCycle</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LifeCycle</servlet-name>
+        <url-pattern>/LifeCycle</url-pattern>
+    </servlet-mapping>
 </web-app>

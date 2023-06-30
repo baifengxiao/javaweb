@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-
-<beans>
-
-    <bean id="add" class="cn.sc.love.servlet.Servlet.AddServlet">
-    </bean>
-</beans>
