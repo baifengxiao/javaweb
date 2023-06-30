@@ -11,13 +11,8 @@ import java.io.IOException;
  * @create 2023-04-20-22:36
  */
 public class AddServlet extends HttpServlet {
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-        String fname = req.getParameter("fname");
-        Integer price = Integer.valueOf(req.getParameter("price"));
-        Integer fcount = Integer.valueOf(req.getParameter("fcount"));
-        String remark = req.getParameter("remark");
+
+    protected void doPost( String fname,Integer price, Integer fcount, String remark  ) throws ServletException, IOException {
 
         System.out.println("fname=" + fname);
         System.out.println("price=" + price);

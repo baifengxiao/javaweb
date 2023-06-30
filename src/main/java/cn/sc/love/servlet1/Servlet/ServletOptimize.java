@@ -1,4 +1,8 @@
+<<<<<<< HEAD:src/main/java/cn/sc/love/servlet1/Servlet/ServletOptimize.java
 package cn.sc.love.servlet1.Servlet;
+=======
+package cn.sc.love.servlet.Servlet;
+>>>>>>> origin/master:src/main/java/cn/sc/love/servlet/Servlet/ServletOptimize.java
 
 
 import javax.servlet.ServletException;
