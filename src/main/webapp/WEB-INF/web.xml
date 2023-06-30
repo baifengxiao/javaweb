@@ -35,4 +35,20 @@
         <servlet-name>SessionTest</servlet-name>
         <url-pattern>/04</url-pattern>
     </servlet-mapping>
+        <servlet>
+            <servlet-name>TestForward</servlet-name>
+            <servlet-class>cn.sc.love.servlet.TestForward</servlet-class>
+        </servlet>
+        <servlet-mapping>
+            <servlet-name>TestForward</servlet-name>
+            <url-pattern>/05</url-pattern>
+        </servlet-mapping>
+    <servlet>
+        <servlet-name>TestSendRedirect</servlet-name>
+        <servlet-class>cn.sc.love.servlet.TestSendRedirect</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TestSendRedirect</servlet-name>
+        <url-pattern>/06</url-pattern>
+    </servlet-mapping>
 </web-app>

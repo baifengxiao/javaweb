@@ -5,22 +5,9 @@
          version="4.0">
 
 
-<!--    <servlet>-->
-<!--        <servlet-name>SessionTest1</servlet-name>-->
-<!--        <servlet-class>cn.sc.love.servlet1.Servlet.SessionTest1</servlet-class>-->
-<!--    </servlet>-->
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>SessionTest1</servlet-name>-->
-<!--        <url-pattern>/04</url-pattern>-->
-<!--    </servlet-mapping>-->
-<!--    <servlet>-->
-<!--        <servlet-name>TestForward</servlet-name>-->
-<!--        <servlet-class>cn.sc.love.servlet1.Servlet.TestForward</servlet-class>-->
-<!--    </servlet>-->
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>TestForward</servlet-name>-->
-<!--        <url-pattern>/05</url-pattern>-->
-<!--    </servlet-mapping>-->
+
+
+
 <!--    <servlet>-->
 <!--        <servlet-name>TestSendRedirect</servlet-name>-->
 <!--        <servlet-class>cn.sc.love.servlet1.Servlet.TestSendRedirect</servlet-class>-->
