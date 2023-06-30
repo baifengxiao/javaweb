@@ -1,6 +1,5 @@
-package cn.sc.love.servlet.Servlet;
+package cn.sc.love.servlet1.Servlet;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -9,13 +8,12 @@ import java.io.IOException;
 
 /**
  * @author YPT
- * @create 2023-04-21-17:41
+ * @create 2023-04-21-17:51
  */
-public class TestForward extends HttpServlet {
-
+public class TestSendRedirect extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("内部转发....");
-        req.getRequestDispatcher("/04").forward(req, resp);
+        System.out.println("重定向");
+        resp.sendRedirect("04");
     }
 }

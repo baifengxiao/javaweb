@@ -1,4 +1,4 @@
-package cn.sc.love.servlet.Servlet;
+package cn.sc.love.servlet1.Servlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

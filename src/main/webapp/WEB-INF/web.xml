@@ -4,51 +4,12 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
     <servlet>
-        <servlet-name>AddServlet</servlet-name>
-        <servlet-class>cn.sc.love.servlet.Servlet.AddServlet</servlet-class>
+        <servlet-name>TestServlet</servlet-name>
+        <servlet-class>cn.sc.love.servlet.TestServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>AddServlet</servlet-name>
-        <url-pattern>/add</url-pattern>
+        <servlet-name>TestServlet</servlet-name>
+        <url-pattern>/fruit</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>LifeCycle</servlet-name>
-        <servlet-class>cn.sc.love.servlet.Servlet.LifeCycle</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LifeCycle</servlet-name>
-        <url-pattern>/02</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>SessionTest</servlet-name>
-        <servlet-class>cn.sc.love.servlet.Servlet.SessionTest</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SessionTest</servlet-name>
-        <url-pattern>/03</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>SessionTest1</servlet-name>
-        <servlet-class>cn.sc.love.servlet.Servlet.SessionTest1</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SessionTest1</servlet-name>
-        <url-pattern>/04</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>TestForward</servlet-name>
-        <servlet-class>cn.sc.love.servlet.Servlet.TestForward</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>TestForward</servlet-name>
-        <url-pattern>/05</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>TestSendRedirect</servlet-name>
-        <servlet-class>cn.sc.love.servlet.Servlet.TestSendRedirect</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>TestSendRedirect</servlet-name>
-        <url-pattern>/06</url-pattern>
-    </servlet-mapping>
+
 </web-app>
