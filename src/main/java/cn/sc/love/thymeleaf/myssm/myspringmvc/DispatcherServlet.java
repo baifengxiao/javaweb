@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,9 +34,9 @@ import java.util.Map;
 @WebServlet("*.do")
 public class DispatcherServlet extends ViewBaseServlet {
 
-    private Map<String,Object> beanMap = new HashMap<>();
+    private Map<String, Object> beanMap = new HashMap<>();
 
-    public DispatcherServlet(){
+    public DispatcherServlet() {
     }
 
     public void init() throws ServletException {
@@ -45,25 +46,25 @@ public class DispatcherServlet extends ViewBaseServlet {
             //1.创建DocumentBuilderFactory
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             //2.创建DocumentBuilder对象
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder() ;
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             //3.创建Document对象
             Document document = documentBuilder.parse(inputStream);
 
             //4.获取所有的bean节点
             NodeList beanNodeList = document.getElementsByTagName("bean");
-            for(int i = 0 ; i<beanNodeList.getLength() ; i++){
+            for (int i = 0; i < beanNodeList.getLength(); i++) {
                 Node beanNode = beanNodeList.item(i);
-                if(beanNode.getNodeType() == Node.ELEMENT_NODE){
-                    Element beanElement = (Element)beanNode ;
-                    String beanId =  beanElement.getAttribute("id");
+                if (beanNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element beanElement = (Element) beanNode;
+                    String beanId = beanElement.getAttribute("id");
                     String className = beanElement.getAttribute("class");
                     Class controllerBeanClass = Class.forName(className);
-                    Object beanObj = controllerBeanClass.newInstance() ;
+                    Object beanObj = controllerBeanClass.newInstance();
 //                      回滚之前的临时设置
 //                    Method setServletContextMethod = controllerBeanClass.getDeclaredMethod("setServletContext",ServletContext.class);
 //                    setServletContextMethod.invoke(beanObj , this.getServletContext());
 
-                    beanMap.put(beanId , beanObj) ;
+                    beanMap.put(beanId, beanObj);
                 }
             }
         } catch (ParserConfigurationException e) {
@@ -92,41 +93,74 @@ public class DispatcherServlet extends ViewBaseServlet {
         // 第2步： hello -> HelloController 或者 fruit -> FruitController
         String servletPath = request.getServletPath();
         servletPath = servletPath.substring(1);
-        int lastDotIndex = servletPath.lastIndexOf(".do") ;
-        servletPath = servletPath.substring(0,lastDotIndex);
+        int lastDotIndex = servletPath.lastIndexOf(".do");
+        servletPath = servletPath.substring(0, lastDotIndex);
 
         Object controllerBeanObj = beanMap.get(servletPath);
 
         String operate = request.getParameter("operate");
-        if(StringUtil.isEmpty(operate)){
-            operate = "index" ;
+        if (StringUtil.isEmpty(operate)) {
+            operate = "index";
         }
 
         try {
-            Method method = controllerBeanObj.getClass().getDeclaredMethod(operate,HttpServletRequest.class);
-            if(method!=null){
+            Method[] methods = controllerBeanObj.getClass().getDeclaredMethods();
+            for (Method method : methods) {
+                //1,统一获取请求参数
+                Parameter[] parameters = method.getParameters();
+
+                Object[] parameterValues = new Object[parameters.length];
+
+                for (int i = 0; i < parameters.length; i++) {
+                    Parameter parameter = parameters[i];
+                    String parameterName = parameter.getName();
+                    if ("request".equals(parameterName)) {
+                        parameterValues[i] = request;
+                    } else if ("response".equals(parameterName)) {
+                        parameterValues[i] = response;
+                    } else if ("session".equals(parameterName)) {
+                        parameterValues[i] = request.getSession();
+                    } else {
+
+                        String parameterValue = request.getParameter(parameterName);
+                        //不考虑复选框的情况
+                        String typeName = parameter.getType().getName();
+
+                        Object parameterObj=parameterValue;
+                        //简单举例包装类到string的转换问题，以Integer为例
+                        if (parameterObj!=null){
+                            if ("java.lang.Integer".equals( typeName)){
+                                parameterObj=Integer.parseInt(parameterValue);
+                            }
+                        }
+
+                        parameterValues[i] = parameterObj;
+                    }
+                }
 
                 //2,controller组件中的方法字符串调用
                 method.setAccessible(true);
-                Object returnObj = method.invoke(controllerBeanObj, request);
+                Object returnObj = method.invoke(controllerBeanObj, parameterValues);
 
-               //3.试图处理，完成重定向
-                String methodReturnStr= (String) returnObj;
-                if (methodReturnStr.startsWith("redirect:")){
+                //3.试图处理，完成重定向
+                String methodReturnStr = (String) returnObj;
+                if (methodReturnStr.startsWith("redirect:")) {
                     String redirectStr = methodReturnStr.substring("redirect:".length());
                     response.sendRedirect(redirectStr);
-                }else {
-                    super.processTemplate(methodReturnStr,request,response);
+                } else {
+                    super.processTemplate(methodReturnStr, request, response);
                 }
-            }else{
-                throw new RuntimeException("operate值非法!");
+
+
             }
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            Method method = controllerBeanObj.getClass().getDeclaredMethod(operate, HttpServletRequest.class);
+
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
             e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
         }
     }
 }
