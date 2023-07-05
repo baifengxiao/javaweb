@@ -13,5 +13,17 @@
         <param-value>.html</param-value>
     </context-param>
 
+    <servlet>
+        <servlet-name>initDemo2</servlet-name>
+        <servlet-class>cn.sc.love.Deme1Servlet</servlet-class>
+        <init-param>
+            <param-name>uname</param-name>
+            <param-value>zhangsan</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>initDemo2</servlet-name>
+        <url-pattern>/initDemo2</url-pattern>
+    </servlet-mapping>
 
 </web-app>
