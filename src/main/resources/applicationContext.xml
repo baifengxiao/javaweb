@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <beans>
-    <bean id="fruit" class="cn.sc.love.thymeleaf.servlet.FruitController">
+    <bean id="fruit" class="cn.sc.love.thymeleaf.fruit.controller.FruitController">
     </bean>
 </beans>

@@ -16,18 +16,15 @@ import java.io.IOException;
  * @Author yupengtao
  * @Date 2023/7/1 20:11
  **/
+
 public class ViewBaseServlet extends HttpServlet {
 
     private TemplateEngine templateEngine;
-    private ServletContext servletContext;
-
-    //初始化
-
+    private ServletContext servletContext ;
     public void init(ServletContext servletContext) throws ServletException {
-        this.servletContext=servletContext;
-
+        this.servletContext = servletContext ;
         // 1.获取ServletContext对象
-//        ServletContext servletContext = this.getServletContext();
+        //ServletContext servletContext = this.getServletContext();
 
         // 2.创建Thymeleaf解析器对象
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
@@ -63,7 +60,6 @@ public class ViewBaseServlet extends HttpServlet {
 
     }
 
-    //处理模板，完成资源转发和数据渲染
     protected void processTemplate(String templateName, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         // 1.设置响应体内容类型和字符集
         resp.setContentType("text/html;charset=UTF-8");

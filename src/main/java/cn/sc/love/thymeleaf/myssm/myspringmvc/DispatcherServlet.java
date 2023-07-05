@@ -29,112 +29,95 @@ import java.util.Map;
  * @Author yupengtao
  * @Date 2023/7/2 14:26
  **/
+
 @WebServlet("*.do")
 public class DispatcherServlet extends HttpServlet {
 
-    Map<String, Object> beanMap = new HashMap<>();
+    private Map<String,Object> beanMap = new HashMap<>();
 
-    //解析标签对象，目的是通过:解析后的路径fruit   --->   找到对应的FruitController
-    //第2步，读取配置文件，扔到类里面去
-    public DispatcherServlet() {
-
+    public DispatcherServlet(){
     }
 
-    public void init(ServletContext servletContext) {
+    public void init(){
         try {
-            //读取自己写的配置文件流
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream("applicationContext.xml");
-            //1,创建documentBuilderFactory
+            //1.创建DocumentBuilderFactory
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-
-            //2，创建documentBuilder
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            //3，获取document对象
+            //2.创建DocumentBuilder对象
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder() ;
+            //3.创建Document对象
             Document document = documentBuilder.parse(inputStream);
 
-            //4,获取所有的bean节点
+            //4.获取所有的bean节点
             NodeList beanNodeList = document.getElementsByTagName("bean");
-            for (int i = 0; i < beanNodeList.getLength(); i++) {
+            for(int i = 0 ; i<beanNodeList.getLength() ; i++){
                 Node beanNode = beanNodeList.item(i);
-                if (beanNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element beanElement = (Element) beanNode;
-                    String beanid = beanElement.getAttribute("id");
+                if(beanNode.getNodeType() == Node.ELEMENT_NODE){
+                    Element beanElement = (Element)beanNode ;
+                    String beanId =  beanElement.getAttribute("id");
                     String className = beanElement.getAttribute("class");
-
-                    //5.到此，获取了配置文件中的类对象，
-//
                     Class controllerBeanClass = Class.forName(className);
-                    Object beanObj = controllerBeanClass.newInstance();
+                    Object beanObj = controllerBeanClass.newInstance() ;
+                    Method setServletContextMethod = controllerBeanClass.getDeclaredMethod("setServletContext",ServletContext.class);
+                    setServletContextMethod.invoke(beanObj , this.getServletContext());
 
-                    //临时手动调用初始化方法
-                    Method setServletContextMethod = controllerBeanClass.getDeclaredMethod("setServletContext", ServletContext.class);
-                    setServletContextMethod.invoke(beanObj, this.getServletContext());
-
-                    beanMap.put(beanid, beanObj);
+                    beanMap.put(beanId , beanObj) ;
                 }
             }
         } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (SAXException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
-
     }
 
-    //第1步，截取请求路径中的servlet名称
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        req.setCharacterEncoding("UTF-8");
-        String servletPath = req.getServletPath();
-
-        //去掉/
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //设置编码
+        request.setCharacterEncoding("UTF-8");
+        //假设url是：  http://localhost:8080/pro15/hello.do
+        //那么servletPath是：    /hello.do
+        // 我的思路是：
+        // 第1步： /hello.do ->   hello   或者  /fruit.do  -> fruit
+        // 第2步： hello -> HelloController 或者 fruit -> FruitController
+        String servletPath = request.getServletPath();
         servletPath = servletPath.substring(1);
-        //去掉.do
-        int lastIndexOf = servletPath.lastIndexOf(".do");
-        servletPath = servletPath.substring(0, lastIndexOf);
-        System.out.println("servletPath = " + servletPath);
+        int lastDotIndex = servletPath.lastIndexOf(".do") ;
+        servletPath = servletPath.substring(0,lastDotIndex);
 
         Object controllerBeanObj = beanMap.get(servletPath);
 
-//        req.setAttribute("operate","add");
-        //第3步，反射调用这个方法
-        String operate = req.getParameter("operate");
-        System.out.println(operate);
-
-        if (StringUtil.isEmpty(operate)) {
-            operate = "index";
+        String operate = request.getParameter("operate");
+        if(StringUtil.isEmpty(operate)){
+            operate = "index" ;
         }
 
         try {
-            Method method = controllerBeanObj.getClass().getDeclaredMethod(operate, HttpServletRequest.class, HttpServletResponse.class);
-            if (method != null) {
+            Method method = controllerBeanObj.getClass().getDeclaredMethod(operate,HttpServletRequest.class,HttpServletResponse.class);
+            if(method!=null){
                 method.setAccessible(true);
-                method.invoke(controllerBeanObj, req, resp);
-                return;
-            } else {
+                method.invoke(controllerBeanObj,request,response);
+            }else{
                 throw new RuntimeException("operate值非法!");
             }
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
-
-
     }
 }
