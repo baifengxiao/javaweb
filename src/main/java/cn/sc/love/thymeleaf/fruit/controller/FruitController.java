@@ -18,12 +18,10 @@ import java.util.List;
  * @Author yupengtao
  * @Date 2023/7/5 18:23
  **/
-public class FruitController extends ViewBaseServlet {
+public class FruitController {
     private FruitDAO fruitDAO = new FruitDAOImpl();
 
-    private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //1.设置编码
-        request.setCharacterEncoding("utf-8");
+    private String update(HttpServletRequest request) {
 
         //2.获取参数
         String fidStr = request.getParameter("fid");
@@ -39,31 +37,35 @@ public class FruitController extends ViewBaseServlet {
         fruitDAO.updateFruit(new Fruit(fid, fname, price, fcount, remark));
 
         //4.资源跳转
-        response.sendRedirect("fruit.do");
+//        response.sendRedirect("fruit.do");
+        //不单个直接跳转，而是返回字符串
+        return "redirect:fruit.do";
     }
 
-    private void edit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    private String edit(HttpServletRequest request) {
         String fidStr = request.getParameter("fid");
         if (StringUtil.isNotEmpty(fidStr)) {
             int fid = Integer.parseInt(fidStr);
             Fruit fruit = fruitDAO.getFruitByFid(fid);
             request.setAttribute("fruit", fruit);
-            super.processTemplate("edit", request, response);
+            return "edit";
         }
+        return "error";
     }
 
-    private void del(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    private String del(HttpServletRequest request) {
         String fidStr = request.getParameter("fid");
         if (StringUtil.isNotEmpty(fidStr)) {
             int fid = Integer.parseInt(fidStr);
             fruitDAO.delFruit(fid);
 
             //super.processTemplate("index",request,response);
-            response.sendRedirect("fruit.do");
+            return "redirect:fruit.do";
         }
+        return "error";
     }
 
-    private void add(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private String add(HttpServletRequest request) throws IOException {
         request.setCharacterEncoding("UTF-8");
 
         String fname = request.getParameter("fname");
@@ -75,11 +77,11 @@ public class FruitController extends ViewBaseServlet {
 
         fruitDAO.addFruit(fruit);
 
-        response.sendRedirect("fruit.do");
+        return "redirect:fruit.do";
 
     }
 
-    private void index(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    private String index(HttpServletRequest request) {
         HttpSession session = request.getSession();
 
         // 设置当前页，默认值1
@@ -144,7 +146,9 @@ public class FruitController extends ViewBaseServlet {
         //逻辑视图名称 ：   index
         //物理视图名称 ：   view-prefix + 逻辑视图名称 + view-suffix
         //所以真实的视图名称是：      /       index       .html
-        super.processTemplate("index", request, response);
+//        super.processTemplate("index", request, response);
+        return "index";
     }
+
 }
 

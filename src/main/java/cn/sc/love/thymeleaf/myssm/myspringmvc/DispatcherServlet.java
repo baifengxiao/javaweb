@@ -31,14 +31,15 @@ import java.util.Map;
  **/
 
 @WebServlet("*.do")
-public class DispatcherServlet extends HttpServlet {
+public class DispatcherServlet extends ViewBaseServlet {
 
     private Map<String,Object> beanMap = new HashMap<>();
 
     public DispatcherServlet(){
     }
 
-    public void init(){
+    public void init() throws ServletException {
+        super.init();
         try {
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream("applicationContext.xml");
             //1.创建DocumentBuilderFactory
@@ -58,8 +59,9 @@ public class DispatcherServlet extends HttpServlet {
                     String className = beanElement.getAttribute("class");
                     Class controllerBeanClass = Class.forName(className);
                     Object beanObj = controllerBeanClass.newInstance() ;
-                    Method setServletContextMethod = controllerBeanClass.getDeclaredMethod("setServletContext",ServletContext.class);
-                    setServletContextMethod.invoke(beanObj , this.getServletContext());
+//                      回滚之前的临时设置
+//                    Method setServletContextMethod = controllerBeanClass.getDeclaredMethod("setServletContext",ServletContext.class);
+//                    setServletContextMethod.invoke(beanObj , this.getServletContext());
 
                     beanMap.put(beanId , beanObj) ;
                 }
@@ -75,10 +77,6 @@ public class DispatcherServlet extends HttpServlet {
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
     }
@@ -105,10 +103,21 @@ public class DispatcherServlet extends HttpServlet {
         }
 
         try {
-            Method method = controllerBeanObj.getClass().getDeclaredMethod(operate,HttpServletRequest.class,HttpServletResponse.class);
+            Method method = controllerBeanObj.getClass().getDeclaredMethod(operate,HttpServletRequest.class);
             if(method!=null){
+
+                //2,controller组件中的方法字符串调用
                 method.setAccessible(true);
-                method.invoke(controllerBeanObj,request,response);
+                Object returnObj = method.invoke(controllerBeanObj, request);
+
+               //3.试图处理，完成重定向
+                String methodReturnStr= (String) returnObj;
+                if (methodReturnStr.startsWith("redirect:")){
+                    String redirectStr = methodReturnStr.substring("redirect:".length());
+                    response.sendRedirect(redirectStr);
+                }else {
+                    super.processTemplate(methodReturnStr,request,response);
+                }
             }else{
                 throw new RuntimeException("operate值非法!");
             }
