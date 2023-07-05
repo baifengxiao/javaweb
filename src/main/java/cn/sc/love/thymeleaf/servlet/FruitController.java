@@ -10,6 +10,8 @@ import cn.sc.love.thymeleaf.fruit.dao.FruitDAO;
 import cn.sc.love.thymeleaf.fruit.dao.impl.FruitDAOImpl;
 import cn.sc.love.thymeleaf.myssm.myspringmvc.ViewBaseServlet;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import javax.servlet.annotation.WebServlet;
@@ -31,8 +33,15 @@ public class FruitController extends ViewBaseServlet {
 
     //之前FruitServlet是一个Sevlet组件，那么其中的init方法一定会被调用
     //之前的init方法内部会出现一句话：super.init();
+    private ServletContext servletContext;
+
+    public void setServletContext(ServletContext servletContext) throws ServletException {
+        this.servletContext = servletContext;
+        super.init(servletContext);
+    }
 
     private FruitDAO fruitDAO = new FruitDAOImpl();
+
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -58,12 +67,7 @@ public class FruitController extends ViewBaseServlet {
         }
 
 
-
-
     }
-
-
-
 
 
 }

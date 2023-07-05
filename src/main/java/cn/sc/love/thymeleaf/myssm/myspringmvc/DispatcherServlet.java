@@ -8,6 +8,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,10 +36,11 @@ public class DispatcherServlet extends HttpServlet {
 
     //解析标签对象，目的是通过:解析后的路径fruit   --->   找到对应的FruitController
     //第2步，读取配置文件，扔到类里面去
-    public DispatcherServlet(){
+    public DispatcherServlet() {
 
     }
-    public void init(ServletConfig servletConfig) {
+
+    public void init(ServletContext servletContext) {
         try {
             //读取自己写的配置文件流
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream("applicationContext.xml");
@@ -64,9 +66,10 @@ public class DispatcherServlet extends HttpServlet {
                     Class controllerBeanClass = Class.forName(className);
                     Object beanObj = controllerBeanClass.newInstance();
 
-                    Field servletContextField = controllerBeanClass.getDeclaredField("servletContext");
-                    servletContextField.setAccessible(true);
-                    servletContextField.set(beanObj, servletConfig.getServletContext());
+                    //临时手动调用初始化方法
+                    Method setServletContextMethod = controllerBeanClass.getDeclaredMethod("setServletContext", ServletContext.class);
+                    setServletContextMethod.invoke(beanObj, this.getServletContext());
+
                     beanMap.put(beanid, beanObj);
                 }
             }
@@ -82,7 +85,9 @@ public class DispatcherServlet extends HttpServlet {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
-        } catch (NoSuchFieldException e) {
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
             throw new RuntimeException(e);
         }
 
