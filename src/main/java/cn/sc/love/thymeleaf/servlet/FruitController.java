@@ -6,8 +6,6 @@ package cn.sc.love.thymeleaf.servlet;
  **/
 
 
-import cn.sc.love.servlet.util.StringUtil;
-
 import javax.servlet.ServletException;
 
 import javax.servlet.annotation.WebServlet;
@@ -26,14 +24,13 @@ import static com.sun.javafx.fxml.expression.Expression.add;
  * @create 2023-04-22-2:30
  */
 @WebServlet("/fruit.do")
-public class ServletOptimize extends HttpServlet {
+public class FruitController extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        req.setAttribute("operate", "C");
+        req.setAttribute("operate", "fruit");
         String operate = (String) req.getAttribute("operate");
         System.out.println("当前操作是：" + operate);
-
 
         Method[] methods = this.getClass().getDeclaredMethods();
         for (Method method : methods) {
