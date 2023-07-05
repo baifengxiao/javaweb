@@ -7,6 +7,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +18,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -33,7 +35,10 @@ public class DispatcherServlet extends HttpServlet {
 
     //解析标签对象，目的是通过:解析后的路径fruit   --->   找到对应的FruitController
     //第2步，读取配置文件，扔到类里面去
-    public DispatcherServlet() {
+    public DispatcherServlet(){
+
+    }
+    public void init(ServletConfig servletConfig) {
         try {
             //读取自己写的配置文件流
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream("applicationContext.xml");
@@ -55,7 +60,13 @@ public class DispatcherServlet extends HttpServlet {
                     String className = beanElement.getAttribute("class");
 
                     //5.到此，获取了配置文件中的类对象，
-                    Object beanObj = Class.forName(className).newInstance();
+//
+                    Class controllerBeanClass = Class.forName(className);
+                    Object beanObj = controllerBeanClass.newInstance();
+
+                    Field servletContextField = controllerBeanClass.getDeclaredField("servletContext");
+                    servletContextField.setAccessible(true);
+                    servletContextField.set(beanObj, servletConfig.getServletContext());
                     beanMap.put(beanid, beanObj);
                 }
             }
@@ -71,9 +82,12 @@ public class DispatcherServlet extends HttpServlet {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
         }
 
     }
+
     //第1步，截取请求路径中的servlet名称
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -116,25 +130,6 @@ public class DispatcherServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
 
-//          另一种写法，不用这种
-//        Method[] methods = declaredMethods;
-//
-//
-//        Method[] methods = controllerBeanObj.getClass().getDeclaredMethods();
-//        for (Method method : methods) {
-//            String methodName = method.getName();
-//            if (methodName.equals(operate)) {
-//                try {
-//                    method.invoke(this, req, resp);
-//                    return;
-//                } catch (IllegalAccessException e) {
-//                    throw new RuntimeException(e);
-//                } catch (InvocationTargetException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//
-//        }
 
     }
 }
