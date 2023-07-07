@@ -1,16 +1,11 @@
 package cn.sc.love.thymeleaf.fruit.controller;
 
 import cn.sc.love.servlet.util.StringUtil;
-import cn.sc.love.thymeleaf.fruit.dao.FruitDAO;
-import cn.sc.love.thymeleaf.fruit.dao.impl.FruitDAOImpl;
+import cn.sc.love.thymeleaf.fruit.biz.FruitService;
+import cn.sc.love.thymeleaf.fruit.biz.impl.FruitServiceImpl;
 import cn.sc.love.thymeleaf.fruit.pojo.Fruit;
-import cn.sc.love.thymeleaf.myssm.myspringmvc.ViewBaseServlet;
-import jdk.nashorn.internal.ir.IfNode;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
@@ -20,7 +15,8 @@ import java.util.List;
  * @Date 2023/7/5 18:23
  **/
 public class FruitController {
-    private FruitDAO fruitDAO = new FruitDAOImpl();
+//    private FruitDAO fruitDAO = new FruitDAOImpl();
+private FruitService fruitService=new FruitServiceImpl();
 
     private String update(Integer fid, String fname, Integer price, Integer fcount, String remark) {
 
@@ -35,7 +31,7 @@ public class FruitController {
 //        String remark = request.getParameter("remark");
 
         //3.执行更新
-        fruitDAO.updateFruit(new Fruit(fid, fname, price, fcount, remark));
+        fruitService.updateFruit(new Fruit(fid, fname, price, fcount, remark));
 
         //4.资源跳转
 //        response.sendRedirect("fruit.do");
@@ -47,7 +43,7 @@ public class FruitController {
 
         if (fid != null) {
 
-            Fruit fruit = fruitDAO.getFruitByFid(fid);
+            Fruit fruit = fruitService.getFruitByFid(fid);
             request.setAttribute("fruit", fruit);
             return "edit";
         }
@@ -58,7 +54,7 @@ public class FruitController {
 
         if (fidStr != null) {
 
-            fruitDAO.delFruit(fidStr);
+            fruitService.delFruit(fidStr);
 
             //super.processTemplate("index",request,response);
             return "redirect:fruit.do";
@@ -69,7 +65,7 @@ public class FruitController {
     private String add(Integer fid, String fname, Integer price, Integer fcount, String remark) throws IOException {
 
         Fruit fruit = new Fruit(0, fname, price, fcount, remark);
-        fruitDAO.addFruit(fruit);
+        fruitService.addFruit(fruit);
         return "redirect:fruit.do";
     }
 
@@ -100,14 +96,14 @@ public class FruitController {
         // 重新更新当前页的值
         session.setAttribute("pageNo", pageNo);
 
-        FruitDAO fruitDAO = new FruitDAOImpl();
-        List<Fruit> fruitList = fruitDAO.getFruitList(keyword, pageNo);
+//        FruitDAO fruitDAO = new FruitDAOImpl();
+        List<Fruit> fruitList = fruitService.getFruitList(keyword, pageNo);
         session.setAttribute("fruitList", fruitList);
 
         //总记录条数
-        int fruitCount = fruitDAO.getFruitCount(keyword);
+        int pageCount = fruitService.getPageCount(keyword);
         //总页数
-        int pageCount = (fruitCount + 5 - 1) / 5;
+//        int pageCount = (fruitCount + 5 - 1) / 5;
 
         session.setAttribute("pageCount", pageCount);
 
