@@ -1,8 +1,7 @@
 package cn.sc.love.thymeleaf.fruit.controller;
 
 import cn.sc.love.servlet.util.StringUtil;
-import cn.sc.love.thymeleaf.fruit.biz.FruitService;
-import cn.sc.love.thymeleaf.fruit.biz.impl.FruitServiceImpl;
+import cn.sc.love.thymeleaf.fruit.serive.FruitService;
 import cn.sc.love.thymeleaf.fruit.pojo.Fruit;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +15,7 @@ import java.util.List;
  **/
 public class FruitController {
 //    private FruitDAO fruitDAO = new FruitDAOImpl();
-private FruitService fruitService=new FruitServiceImpl();
+private FruitService fruitService=null;
 
     private String update(Integer fid, String fname, Integer price, Integer fcount, String remark) {
 

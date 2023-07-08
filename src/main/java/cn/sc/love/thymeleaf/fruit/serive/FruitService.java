@@ -1,4 +1,4 @@
-package cn.sc.love.thymeleaf.fruit.biz;
+package cn.sc.love.thymeleaf.fruit.serive;
 
 import cn.sc.love.thymeleaf.fruit.pojo.Fruit;
 

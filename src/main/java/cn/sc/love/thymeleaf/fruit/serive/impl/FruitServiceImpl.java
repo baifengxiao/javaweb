@@ -1,9 +1,8 @@
-package cn.sc.love.thymeleaf.fruit.biz.impl;
+package cn.sc.love.thymeleaf.fruit.serive.impl;
 
-import cn.sc.love.thymeleaf.fruit.biz.FruitService;
 import cn.sc.love.thymeleaf.fruit.dao.FruitDAO;
-import cn.sc.love.thymeleaf.fruit.dao.impl.FruitDAOImpl;
 import cn.sc.love.thymeleaf.fruit.pojo.Fruit;
+import cn.sc.love.thymeleaf.fruit.serive.FruitService;
 
 import java.util.List;
 
@@ -14,7 +13,7 @@ import java.util.List;
 public class FruitServiceImpl implements FruitService {
 
     //service实现serviceimpl，serviceimpl调dao层，dao调用daoimpl实现
-    private FruitDAO fruitDAO = new FruitDAOImpl();
+    private FruitDAO fruitDAO =null;
 
     @Override
     public List<Fruit> getFruitList(String keyword, Integer pageNo) {

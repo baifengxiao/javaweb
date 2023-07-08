@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <beans>
-    <bean id="fruit" class="cn.sc.love.thymeleaf.fruit.controller.FruitController">
+    <!--    准备三个类，需要的时候用-->
+    <bean id="fruitDao" class="cn.sc.love.thymeleaf.fruit.dao.impl.FruitDAOImpl"/>
+    <bean id="fruitService" class="cn.sc.love.thymeleaf.fruit.serive.impl.FruitServiceImpl">
+        <!--   ！！！重要：property里面的name就是属性名字，比如：
+             public class FruitServiceImpl implements FruitService {
+                private FruitDAO fruitDAO =null;
+             }
+             中，name就是fruitDAO，
+             -->
+        <!--        ref就是引用的类的id-->
+        <property name="fruitDAO" ref="fruitDao"/>
     </bean>
+    <bean id="fruit" class="cn.sc.love.thymeleaf.fruit.controller.FruitController">
+        <property name="fruitService" ref="fruitService">
+
+        </property>
+    </bean>
+
 </beans>
