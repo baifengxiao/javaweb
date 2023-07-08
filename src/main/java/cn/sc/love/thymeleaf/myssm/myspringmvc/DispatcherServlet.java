@@ -28,7 +28,11 @@ private BeanFactory beanFactory;
 
     public void init() throws ServletException {
         super.init();
-        beanFactory=new ClassPathXmlApplicationContext();
+        try {
+            beanFactory=new ClassPathXmlApplicationContext();
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
