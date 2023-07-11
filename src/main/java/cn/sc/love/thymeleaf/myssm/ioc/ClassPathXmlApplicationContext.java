@@ -1,4 +1,4 @@
-package cn.sc.love.thymeleaf.myssm.io;
+package cn.sc.love.thymeleaf.myssm.ioc;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

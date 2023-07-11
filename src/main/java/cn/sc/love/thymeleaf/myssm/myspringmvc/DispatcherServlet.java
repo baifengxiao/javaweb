@@ -1,9 +1,9 @@
 package cn.sc.love.thymeleaf.myssm.myspringmvc;
 
 import cn.sc.love.servlet.util.StringUtil;
-import cn.sc.love.thymeleaf.myssm.io.BeanFactory;
-import cn.sc.love.thymeleaf.myssm.io.ClassPathXmlApplicationContext;
+import cn.sc.love.thymeleaf.myssm.ioc.BeanFactory;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,10 +28,18 @@ private BeanFactory beanFactory;
 
     public void init() throws ServletException {
         super.init();
-        try {
-            beanFactory=new ClassPathXmlApplicationContext();
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+//        try {
+//            beanFactory=new ClassPathXmlApplicationContext();
+//        } catch (IllegalAccessException e) {
+//            throw new RuntimeException(e);
+//        }
+
+        ServletContext application = getServletContext();
+        Object beanFactoryObj = application.getAttribute("beanFactory");
+        if (beanFactoryObj!=null){
+            beanFactory=(BeanFactory) beanFactoryObj;
+        }else {
+            throw new RuntimeException("IOC容器获取失败!");
         }
     }
 

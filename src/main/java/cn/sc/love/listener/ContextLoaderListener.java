@@ -1,5 +1,9 @@
 package cn.sc.love.listener;
 
+import cn.sc.love.thymeleaf.myssm.ioc.BeanFactory;
+import cn.sc.love.thymeleaf.myssm.ioc.ClassPathXmlApplicationContext;
+
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
@@ -11,11 +15,21 @@ import javax.servlet.annotation.WebListener;
 @WebListener
 //实现对应的：Listener的接口(我们这里使用的是ServletContextListener),并且实现它里面的方法
 public class ContextLoaderListener implements ServletContextListener {
+
+
     //     1.1 contextInitialized()这个方法在ServletContext对象被创建出来的时候执行，也就是说在服务器启动的时候执行
-// *    1.2 contextDestroyed()这个方法会在ServletContext对象被销毁的时候执行，也就是说在服务器关闭的时候执行
+//     1.2 contextDestroyed()这个方法会在ServletContext对象被销毁的时候执行，也就是说在服务器关闭的时候执行
+
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
 
+        try {
+            BeanFactory beanFactory = new ClassPathXmlApplicationContext();
+            ServletContext application = servletContextEvent.getServletContext();
+            application.setAttribute("beanFactory",beanFactory);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("在服务器启动的时候，模拟创建SpringMVC的核心容器...");
 
     }
