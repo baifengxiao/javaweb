@@ -1,4 +1,4 @@
-package cn.sc.love.demo;
+package com.this0.demo;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,12 +11,12 @@ import java.io.IOException;
  * @Author yupengtao
  * @Date 2023/7/1 22:22
  **/
-@WebServlet("/demo02")
-public class demo02  extends HttpServlet {
+@WebServlet("/demo04")
+public class demo04 extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Object uname = req.getAttribute("uname");
+        Object uname = req.getSession().getAttribute("uname");
         System.out.println("uname = " + uname);
     }
 }

@@ -23,7 +23,6 @@ public class Deme1Servlet extends HttpServlet {
         String initValue = config.getInitParameter("hello");
         System.out.println("initValue = " + initValue);
         String uname = config.getInitParameter("uname");
-        ;
         System.out.println("uname = " + uname);
 
         //演示下获取上下文参数，此时不用理解这是什么
